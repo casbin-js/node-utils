@@ -1,4 +1,4 @@
-# Casbin.js Server Utilities for Casbin-Node
+# Casbin.js Server Utilities for Node-Casbin
 
 If you are using [Casbin.js](https://github.com/casbin/casbin.js) at your frontend and [Node-Casbin](https://github.com/casbin/node-casbin) as your backend Casbin service, you can install this package at your backend. This package provides a wrapper for generating the user permission, which can be passed to Casbin.js at the frontend.
 
