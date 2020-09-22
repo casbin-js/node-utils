@@ -13,7 +13,7 @@
   "author": "kingiw",
   "license": "ISC",
   "dependencies": {
-    "casbin": "^5.0.6",
+    "casbin": "^5.1.5",
     "typescript": "^3.9.7"
   },
   "devDependencies": {
