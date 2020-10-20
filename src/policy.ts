@@ -1,13 +1,16 @@
 export default class Policy {
-    data!: string[];
+    data: string[] = [];
+
+    // Accept a policy, e.g ["alice", "data1", "read"]
     constructor(policy: string[]) {
-        this.data = Object.assign(this.data, policy)
+        this.data = Object.assign(this.data, policy);
     }
 
-    getAnonymizedPolicyString(idx: number = 0) {
-        const t = this.data[idx+1];
+    getAnonymousString(idx: number = 0): string {
+        const t = this.data[idx];
+        this.data[idx] = '_';
         const ret = this.data.join(",");
-        this.data[idx+1] = t;
+        this.data[idx] = t;
         return ret;
     }
 }

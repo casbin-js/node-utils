@@ -1,46 +1,51 @@
 import {Enforcer} from 'casbin';
-import { isExpressionStatement, visitLexicalEnvironment } from 'typescript';
+import {strict as assert} from 'assert';
 import Matcher from './matcher';
 import Policy from './policy';
+import {getRawMatcherString} from './utils';
 
-class Processor {
+export default class Processor {
     enforcer!: Enforcer;
     matcher!: Matcher;
     constructor(e: Enforcer) {
         this.enforcer = e;
-        // TODO: Init mathcer
-        this.matcher = new Matcher("m = r.sub == p.sub && r.obj == p.obj && r.act == p.act");
+        this.matcher = new Matcher(`m = ${getRawMatcherString(e)}`);
     }
 
-    async process(subject: string): Promise<string> {
-        // 给定一个subject, 返回一个JSON string,
-        // 这个JSON中记录着优化后的model conf与正确的policy
-        
-        let subjects = [subject];
-        let idx = 0;
+    // Given a subject,
+    // return the simplified conf and necessary anonymous policies 
+    async process(subject: string): Promise<string[]> {
+
         let requiredPolicies: Policy[] = [];
-        while (idx < subjects.length) {
-            for (const expr in this.matcher.getExprs()) {
-                if (expr.indexOf("r.sub")) {
-                    if (expr.match("^g\\(.*\\)$")) {
-                        // r.sub is in the form of "g(r.sub, p.sub)"
-                        // 遍历所有group policy, 把符合的g,subjects[idx],xxx中的xxx加入到subjects中
-                        throw new Error("Not implemented");
-                    } else { 
-                        // r.sub is in the form of "r.sub == p.sub"
-                        const policies = await this.enforcer.getFilteredPolicy(0, subjects[idx]);
-                        for (const sPolicy of policies) {
-                            requiredPolicies.push(new Policy(sPolicy));
-                        }
-                    }
-                }
+        let retPolicies: string[] = [];
+        
+        // TODO: 遍历所有的"g"，把符合的g, subject[idx],xxx中的xxx加入到subject中
+        let subjects = [subject];
+
+        for (const subject of subjects) {
+            const policies = await this.enforcer.getFilteredPolicy(0, subject);
+            for (const policy of policies) {
+                requiredPolicies.push(new Policy(policy));
             }
         }
-        const ret = {};
-        return "";
-        // 把所有的policies匿名化。（把subject换成"_"）
-        // 构建新的Matcher: 把含有r.sub的部分替换为"_" （或者直接去掉）
 
+        // Anonymize all subject. (replace r.sub with _)
+        let retPoliciesStr = "";
+        requiredPolicies.forEach((policy) => {
+            let s = policy.getAnonymousString();
+            retPoliciesStr = retPoliciesStr + `p,${s}\n`; // p,_,data1,read
+        });
+
+        // Build new matcher: remove all bool expressions with r_sub
+        this.matcher.getExprs().map((exp, idx) => {
+            console.log(idx, exp);
+            if (exp.indexOf("r_sub") != -1) {
+                this.matcher.ban(idx);
+            }
+        })
+        const conf = this.matcher.getReservedMatcherStr();
+
+        return [conf, retPoliciesStr];
     }
 
 }
