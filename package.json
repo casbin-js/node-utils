@@ -1,8 +1,9 @@
 {
-  "name": "@casbinjs/server-utils",
+  "name": "casbinjs-server-tool",
   "version": "0.0.1",
   "description": "This package provides the facilities to generate permission tokens on node-casbin service.",
-  "main": "./lib/indes.js",
+  "main": "./lib/index.js",
+  "typings": "./lib/index.d.ts",
   "scripts": {
     "build": "rimraf lib && tsc",
     "test": "jest"
@@ -13,7 +14,7 @@
   "author": "kingiw",
   "license": "ISC",
   "dependencies": {
-    "casbin": "^5.1.5",
+    "casbin": "^5.1.6",
     "typescript": "^3.9.7"
   },
   "devDependencies": {
