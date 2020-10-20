@@ -10,6 +10,7 @@ export default class Matcher {
     boolops: BooleanOp[] = [];
     reserved: boolean[] = [];
     
+    // Accept a boolean expr starts with "m =", e.g "m = r.sub == p.sub && r.obj == p.obj"
     constructor(sMatcher: string) {
         assert(sMatcher.startsWith("m ="));
         sMatcher = sMatcher.slice(3);
@@ -29,6 +30,7 @@ export default class Matcher {
         return this.exprs;
     }
 
+    // Ban the ith boolean expression
     ban(idx: number) {
         this.reserved[idx] = false;
     }

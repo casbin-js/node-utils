@@ -9,7 +9,13 @@ export default class Processor {
     matcher!: Matcher;
     constructor(e: Enforcer) {
         this.enforcer = e;
-        this.matcher = new Matcher(`m = ${getRawMatcherString(e)}`);
+        const s = getRawMatcherString(e);
+        if (s) {
+            this.matcher = new Matcher(`m = ${getRawMatcherString(e)}`);
+        }
+        else {
+            throw Error("cannot get matcher string");
+        }
     }
 
     // Given a subject,
@@ -19,8 +25,16 @@ export default class Processor {
         let requiredPolicies: Policy[] = [];
         let retPolicies: string[] = [];
         
-        // TODO: 遍历所有的"g"，把符合的g, subject[idx],xxx中的xxx加入到subject中
+        // Find all the role of the current subject, and regard these roles as "subject alias"
         let subjects = [subject];
+        const groupPolicies = await this.enforcer.getGroupingPolicy();
+        for (const sub of subjects) {
+            groupPolicies.forEach((item) => {
+                if (item[0] == sub) {
+                    subjects.push(item[1]);
+                }
+            });
+        }
 
         for (const subject of subjects) {
             const policies = await this.enforcer.getFilteredPolicy(0, subject);
@@ -38,14 +52,13 @@ export default class Processor {
 
         // Build new matcher: remove all bool expressions with r_sub
         this.matcher.getExprs().map((exp, idx) => {
-            console.log(idx, exp);
             if (exp.indexOf("r_sub") != -1) {
                 this.matcher.ban(idx);
             }
         })
         const conf = this.matcher.getReservedMatcherStr();
-
-        return [conf, retPoliciesStr];
+        
+        return [conf.trim(), retPoliciesStr.trim()];
     }
 
 }

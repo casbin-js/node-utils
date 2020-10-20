@@ -8,8 +8,20 @@ test('basic', async() => {
     let oProcessor = new Processor(e);
     const [conf, policiesStr] = await oProcessor.process("alice");
     const policies = policiesStr.split("\n");
-    expect(policies[0]).toBe("p,_,data1,read");
-    expect(policies[1]).toBe("p,_,data1,write");
-    console.log(conf);
+    expect(policies.length).toBe(2);
+    expect(policies).toContain("p,_,data1,read");
+    expect(policies).toContain("p,_,data1,write");
     expect(conf.trim()).toBe("m = r_obj == p_obj && r_act == p_act");
-})
+});
+
+test('rbac', async() => {
+    const e = await newEnforcer(`${examplesPath}/rbac_model.conf`, `${examplesPath}/rbac_policy.csv`);
+    let oProcessor = new Processor(e);
+    const [conf, policiesStr] = await oProcessor.process("alice");
+    const policies = policiesStr.split("\n");
+    expect(policies.length).toBe(3);
+    expect(policies).toContain("p,_,data1,read");
+    expect(policies).toContain("p,_,data2,read");
+    expect(policies).toContain("p,_,data2,write");
+    expect(conf).toBe("m = r_obj == p_obj && r_act == p_act");
+});
