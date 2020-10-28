@@ -6,6 +6,7 @@
   "typings": "./lib/index.d.ts",
   "scripts": {
     "build": "rimraf lib && tsc",
+    "lint": "yarn eslint . --ext .js,.ts --fix",
     "test": "jest"
   },
   "keywords": [
@@ -19,6 +20,10 @@
   },
   "devDependencies": {
     "@types/jest": "^26.0.8",
+    "@typescript-eslint/eslint-plugin": "^4.6.0",
+    "@typescript-eslint/parser": "^4.6.0",
+    "eslint": "^7.12.1",
+    "eslint-config-google": "^0.14.0",
     "jest": "^26.2.2",
     "rimraf": "^3.0.2",
     "ts-jest": "^26.1.4"

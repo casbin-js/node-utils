@@ -1,7 +1,7 @@
-import {Enforcer, newEnforcer} from 'casbin';
-import Matcher from './matcher';
-import Policy from './policy';
-import * as utils from './utils';
+import {Enforcer, newEnforcer} from "casbin";
+import Matcher from "./matcher";
+import Policy from "./policy";
+import * as utils from "./utils";
 
 export default class CasbinJsServerTool {
     private enforcer!: Enforcer;
@@ -11,16 +11,15 @@ export default class CasbinJsServerTool {
         const s = utils.getRawMatcherString(e);
         if (s) {
             this.matcher = new Matcher(`m = ${s}`);
-        }
-        else {
+        } else {
             throw Error("cannot get matcher string");
         }
     }
-    
+
     // Given the subject, generate the necessary policies
     private async genPolicies(subject: string): Promise<string> {
         // Find all the role of the current subject, and regard these roles as "subject alias"
-        let subjects = [subject];
+        const subjects = [subject];
         const groupPolicies = await this.enforcer.getGroupingPolicy();
         for (const sub of subjects) {
             groupPolicies.forEach((item) => {
@@ -29,14 +28,14 @@ export default class CasbinJsServerTool {
                 }
             });
         }
-        let requiredPolicies: Policy[] = [];
+        const requiredPolicies: Policy[] = [];
         for (const subject of subjects) {
             const policies = await this.enforcer.getFilteredPolicy(0, subject);
             for (const policy of policies) {
                 requiredPolicies.push(new Policy(policy));
             }
         }
-        
+
         // Anonymize all subject. (replace r.sub with _)
         let retPoliciesStr = "";
         requiredPolicies.forEach((policy) => {
@@ -44,18 +43,18 @@ export default class CasbinJsServerTool {
         });
         return retPoliciesStr.trim();
     }
-    
+
     // Remove the expressions with "r_sub"
     private async genMatcher(): Promise<string> {
-        // Remove 
+        // Remove
         this.matcher.getExprs().map((exp, idx) => {
             if (exp.indexOf("r_sub") != -1) {
                 this.matcher.ban(idx);
             }
-        })
+        });
         return this.matcher.getReservedMatcherStr().trim();
     }
-    
+
     /* Return
     {
         "r": ... // request def
@@ -66,7 +65,7 @@ export default class CasbinJsServerTool {
     }
     */
     async genJsonProfile(subject: string): Promise<Object> {
-        let jsonProfile: Record<string, string> = {};
+        const jsonProfile: Record<string, string> = {};
         jsonProfile["r"] = utils.getRawRequestString(this.enforcer);
         jsonProfile["p"] = utils.getRawPolicyString(this.enforcer);
         jsonProfile["e"] = utils.getRawEffectString(this.enforcer);

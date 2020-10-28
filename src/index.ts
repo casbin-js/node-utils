@@ -1,5 +1,5 @@
-import {Enforcer} from 'casbin';
-import CasbinServerTool from './CasbinJsServerTool';
+import {Enforcer} from "casbin";
+import CasbinServerTool from "./CasbinJsServerTool";
 
 // /**
 //  * getPermissionForCasbinJs returns a string describing the permission of a given user.

@@ -8,7 +8,7 @@ export default class Policy {
 
     getAnonymousString(idx: number = 0): string {
         const t = this.data[idx];
-        this.data[idx] = '_';
+        this.data[idx] = "_";
         const ret = this.data.join(",");
         this.data[idx] = t;
         return ret;

@@ -1,4 +1,4 @@
-import {Enforcer} from 'casbin';
+import {Enforcer} from "casbin";
 
 function getModelAttr(e: Enforcer, key: string): string {
     const s = e.getModel().model.get(key)?.get(key)?.value;
@@ -6,21 +6,21 @@ function getModelAttr(e: Enforcer, key: string): string {
 }
 
 export function getRawRequestString(e: Enforcer): string {
-    return getModelAttr(e, 'r');
+    return getModelAttr(e, "r");
 }
 
 export function getRawPolicyString(e: Enforcer): string {
-    return getModelAttr(e, 'p');
+    return getModelAttr(e, "p");
 }
 
 export function getRawEffectString(e: Enforcer): string {
-    return getModelAttr(e, 'e');
+    return getModelAttr(e, "e");
 }
 
 export function getRawMatcherString(e: Enforcer): string {
-    return getModelAttr(e, 'm');
+    return getModelAttr(e, "m");
 }
 
 export function getRawGroupString(e: Enforcer): string {
-    return getModelAttr(e, 'g');
+    return getModelAttr(e, "g");
 }

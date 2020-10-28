@@ -1,11 +1,11 @@
-import {newEnforcer} from 'casbin';
-import CasbinJsServerTool from '../CasbinJsServerTool';
+import {newEnforcer} from "casbin";
+import CasbinJsServerTool from "../CasbinJsServerTool";
 
 const examplesPath = "src/__test__/examples/";
 
-test('basic', async() => {
+test("basic", async () => {
     const e = await newEnforcer(`${examplesPath}/basic_model.conf`, `${examplesPath}/basic_policy.csv`);
-    let svrTool = new CasbinJsServerTool(e);
+    const svrTool = new CasbinJsServerTool(e);
 
     const policiesStr = await svrTool.genPolicies("alice");
     const policies = policiesStr.split("\n");
@@ -17,9 +17,9 @@ test('basic', async() => {
     expect(conf.trim()).toBe("m = r_obj == p_obj && r_act == p_act");
 });
 
-test('rbac', async() => {
+test("rbac", async () => {
     const e = await newEnforcer(`${examplesPath}/rbac_model.conf`, `${examplesPath}/rbac_policy.csv`);
-    let svrTool = new CasbinJsServerTool(e);
+    const svrTool = new CasbinJsServerTool(e);
 
     const policiesStr = await svrTool.genPolicies("alice");
     const policies = policiesStr.split("\n");

@@ -1,4 +1,4 @@
-import {strict as assert} from 'assert';
+import {strict as assert} from "assert";
 
 enum BooleanOp {
     And = 1,
@@ -9,14 +9,14 @@ export default class Matcher {
     exprs: string[] = [];
     boolops: BooleanOp[] = [];
     reserved: boolean[] = [];
-    
+
     // Accept a boolean expr starts with "m =", e.g "m = r.sub == p.sub && r.obj == p.obj"
     constructor(sMatcher: string) {
         assert(sMatcher.startsWith("m ="));
         sMatcher = sMatcher.slice(3);
         this.boolops.push(BooleanOp.Or); // For convenience
-        for (let orExprs of sMatcher.split("||")) {
-            for (let exp of orExprs.split("&&")) {
+        for (const orExprs of sMatcher.split("||")) {
+            for (const exp of orExprs.split("&&")) {
                 this.exprs.push(exp.trim());
                 this.boolops.push(BooleanOp.And);
                 this.reserved.push(true);
@@ -39,7 +39,7 @@ export default class Matcher {
         let ret = "";
         let prev = this.boolops[0];
         for (let i = 0; i < this.exprs.length; ++i) {
-            if (!this.reserved[i]) { 
+            if (!this.reserved[i]) {
                 // Removed the ith exprs
                 prev = this.boolops[i] == BooleanOp.Or ? BooleanOp.Or : this.boolops[i+1];
             } else {
@@ -51,5 +51,4 @@ export default class Matcher {
         ret = "m =" + ret.slice(2);
         return ret;
     }
-    
 }

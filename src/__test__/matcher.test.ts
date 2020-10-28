@@ -1,6 +1,6 @@
-import Matcher from '../matcher';
+import Matcher from "../matcher";
 
-test('matcher', () => {
+test("matcher", () => {
     const m1 = new Matcher("m = r.sub == p.sub && r.obj == p.obj && r.act == p.act");
     expect(m1.getExprs()).toEqual(["r.sub == p.sub", "r.obj == p.obj", "r.act == p.act"]);
 
