@@ -64,13 +64,13 @@ export default class CasbinJsServerTool {
         "ps": "p,a,b,c\np,a,c,b\n..."
     }
     */
-    async genJsonProfile(subject: string): Promise<Object> {
+    async genJsonProfile(subject: string): Promise<string> {
         const jsonProfile: Record<string, string> = {};
         jsonProfile["r"] = utils.getRawRequestString(this.enforcer);
         jsonProfile["p"] = utils.getRawPolicyString(this.enforcer);
         jsonProfile["e"] = utils.getRawEffectString(this.enforcer);
         jsonProfile["m"] = await this.genMatcher();
         jsonProfile["ps"] = await this.genPolicies(subject);
-        return Object(jsonProfile);
+        return JSON.stringify(jsonProfile);
     }
 }

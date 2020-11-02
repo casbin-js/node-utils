@@ -1,0 +1,11 @@
+# dependencies
+node_modules/
+
+# Src and test suites
+src/
+
+.idea/
+package-lock.json
+yarn.lock
+
+npm-debug.log

@@ -1,6 +1,6 @@
 {
   "name": "casbinjs-server-tool",
-  "version": "0.0.1",
+  "version": "0.0.3",
   "description": "This package provides the facilities to generate permission tokens on node-casbin service.",
   "main": "./lib/index.js",
   "typings": "./lib/index.d.ts",

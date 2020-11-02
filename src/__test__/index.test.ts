@@ -7,7 +7,8 @@ test("basic", async () => {
     const e = await newEnforcer(`${examplesPath}/basic_model.conf`, `${examplesPath}/basic_policy.csv`);
     const svrTool = new CasbinJsServerTool(e);
 
-    const profile = await svrTool.genJsonProfile("alice");
+    const profileStr = await svrTool.genJsonProfile("alice");
+    const profile = JSON.parse(profileStr);
     expect(profile.hasOwnProperty("ps")).toBe(true);
 
     const policies = profile["ps"].split("\n");
@@ -24,7 +25,8 @@ test("rbac", async () => {
     const e = await newEnforcer(`${examplesPath}/rbac_model.conf`, `${examplesPath}/rbac_policy.csv`);
     const svrTool = new CasbinJsServerTool(e);
 
-    const profile = await svrTool.genJsonProfile("alice");
+    const profileStr = await svrTool.genJsonProfile("alice");
+    const profile = JSON.parse(profileStr);
     const policies = profile["ps"].split("\n");
     expect(profile.hasOwnProperty("ps")).toBe(true);
     expect(policies.length).toBe(3);
@@ -36,5 +38,5 @@ test("rbac", async () => {
     const conf = profile["m"];
     expect(conf).toBe("m = r_obj == p_obj && r_act == p_act");
 
-    console.log(await svrTool.genJsonProfile("alice"));
+    console.log(profile);
 });
